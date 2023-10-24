@@ -24,14 +24,18 @@
         (table.insert byte-array byte-val)))
     byte-array))
 
+(fn bytes-array-to-string [bytes-array]
+  (local str (string.char (unpack bytes-array)))
+  str)
+
 (fn challenge11 []
   (local hex-string "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d")
   (local b64-ans "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t")
-  (local hex-str (hex-string-to-bytes hex-string))
-  (local base64-str (base64.encode hex-str))
-  (print base64-str)
+  (local hex-str (bytes-array-to-string (hex-string-to-bytes hex-string)))
+  (local b64-str (base64.encode hex-str))
+  (print b64-str)
   (print b64-ans)
-  (if (= base64-str b64-ans)
+  (if (= b64-str b64-ans)
     (print "Challenge 11 passed")
     (print "Challenge 11 failed")))
 
