@@ -1,6 +1,7 @@
 (local base64 (require :base64))
 (local string (require :string))
 (local table (require :table))
+(local bit32 (require :bit32))
 
 ; (fn unpack []
 ;   (if (unpack)
@@ -30,7 +31,7 @@
     byte-array))
 
 (fn bytes-array-to-string [bytes-array]
-  (local str (string.char (unpack bytes-array)))
+  (local str (string.char (table.unpack bytes-array)))
   str)
 
 (fn challenge1-1 []
@@ -44,7 +45,44 @@
     (print "Challenge 1-1 passed")
     (print "Challenge 1-1 failed")))
 
+(fn xor-byte-array [bytes1 bytes2]
+  (let [result []]
+    (for [i 1 (math.max (length bytes1) (length bytes2)) 1]
+      (table.insert result (bit32.bxor (. bytes1 i) (. bytes2 i))))
+    result))
+
+(fn byte-to-hex-str [byte]
+  (local hex-alphabet ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9"  "a" "b" "c" "d" "e" "f"])
+  (let [hex-str {}]
+    (local zero-place (% byte 16))
+    (local sixteen-place (/ (- byte zero-place) 16))
+    (table.insert hex-str (. hex-alphabet (+ zero-place 1)))
+    (table.insert hex-str (. hex-alphabet (+ sixteen-place 1)))
+    hex-str))
+
+(fn bytes-to-hex-string [bytes])
+(let [hex-str ""]
+ (for [i 1 (length bytes) 1]
+   (let [byte (. bytes i)]
+     (let [(char1 char2) (table.unpack (byte-to-hex-str byte))]
+       (.. hex-str char1 char2)))
+   hex-str))
+
+(fn challenge1-2 []
+  (local hex-string1 "1c0111001f010100061a024b53535009181c")
+  (local hex-string2 "686974207468652062756c6c277320657965")
+  (local xor-ans "746865206b696420646f6e277420706c6179")
+  (local bytes1 (hex-string-to-bytes hex-string1))
+  (local bytes2 (hex-string-to-bytes hex-string2))
+  (local xor-str (bytes-to-hex-string (xor-byte-array bytes1 bytes2)))
+  (print xor-str)
+  (print xor-ans)
+  (if (= xor-str xor-ans)
+    (print "Challenge 1-2 passed")
+    (print "Challenge 1-2 failed")))
+
 (fn main []
- (challenge1-1))
+ (challenge1-1)
+ (challenge1-2))
 
 (main)
