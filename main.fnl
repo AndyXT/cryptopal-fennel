@@ -60,13 +60,13 @@
     (table.insert hex-str (. hex-alphabet (+ sixteen-place 1)))
     hex-str))
 
-(fn bytes-to-hex-string [bytes])
-(let [hex-str ""]
- (for [i 1 (length bytes) 1]
-   (let [byte (. bytes i)]
-     (let [(char1 char2) (table.unpack (byte-to-hex-str byte))]
-       (.. hex-str char1 char2)))
-   hex-str))
+(fn bytes-to-hex-string [bytes]
+  (let [hex-str ""]
+    (for [i 1 (length bytes) 1]
+      (let [byte (. bytes i)]
+        (let [(char1 char2) (table.unpack (byte-to-hex-str byte))]
+          (.. hex-str char1 char2))))
+    hex-str))
 
 (fn challenge1-2 []
   (local hex-string1 "1c0111001f010100061a024b53535009181c")
