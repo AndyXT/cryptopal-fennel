@@ -2,7 +2,10 @@
 (local string (require :string))
 (local table (require :table))
 
-; (local unpack (or unpack table.unpack))
+; (fn unpack []
+;   (if (unpack)
+;     unpack
+;     table.unpack))
 
 (fn char-to-byte [char]
   (let [byte-val (string.byte char)]
@@ -27,7 +30,7 @@
     byte-array))
 
 (fn bytes-array-to-string [bytes-array]
-  (local str (string.char (table.unpack bytes-array)))
+  (local str (string.char (unpack bytes-array)))
   str)
 
 (fn challenge1-1 []
