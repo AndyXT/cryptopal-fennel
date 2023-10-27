@@ -52,21 +52,18 @@
     result))
 
 (fn byte-to-hex-str [byte]
-  (local hex-alphabet ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9"  "a" "b" "c" "d" "e" "f"])
-  (let [hex-str {}]
-    (local zero-place (% byte 16))
-    (local sixteen-place (/ (- byte zero-place) 16))
-    (table.insert hex-str (. hex-alphabet (+ zero-place 1)))
-    (table.insert hex-str (. hex-alphabet (+ sixteen-place 1)))
-    hex-str))
+  (local hex-alphabet ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "a" "b" "c" "d" "e" "f"])
+  (let [zero-place (% byte 16)
+        sixteen-place (/ (- byte zero-place) 16)]
+    (.. (. hex-alphabet (+ sixteen-place 1)) ; concatenate here
+         (. hex-alphabet (+ zero-place 1)))))
 
 (fn bytes-to-hex-string [bytes]
-  (let [hex-str ""]
-    (for [i 1 (length bytes) 1]
-      (let [byte (. bytes i)]
-        (let [(char1 char2) (table.unpack (byte-to-hex-str byte))]
-          (.. hex-str char1 char2))))
-    hex-str))
+  (var hex-str "")
+  (each [_ byte (ipairs bytes)]
+    (let [hex-byte (byte-to-hex-str byte)]
+      (set hex-str (.. hex-str hex-byte))))
+  hex-str)
 
 (fn challenge1-2 []
   (local hex-string1 "1c0111001f010100061a024b53535009181c")
