@@ -3,6 +3,8 @@
 (local table (require :table))
 (local bit32 (require :bit32))
 
+;; local unpack = rawget(table, "unpack") or unpack
+
 (fn char-to-byte [char]
   (let [byte-val (string.byte char)]
     (if (and (>= byte-val (string.byte "0")) (<= byte-val (string.byte "9")))
