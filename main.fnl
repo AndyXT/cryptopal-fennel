@@ -3,11 +3,6 @@
 (local table (require :table))
 (local bit32 (require :bit32))
 
-; (fn unpack []
-;   (if (unpack)
-;     unpack
-;     table.unpack))
-
 (fn char-to-byte [char]
   (let [byte-val (string.byte char)]
     (if (and (>= byte-val (string.byte "0")) (<= byte-val (string.byte "9")))
@@ -55,15 +50,19 @@
   (local hex-alphabet ["0" "1" "2" "3" "4" "5" "6" "7" "8" "9" "a" "b" "c" "d" "e" "f"])
   (let [zero-place (% byte 16)
         sixteen-place (/ (- byte zero-place) 16)]
-    (.. (. hex-alphabet (+ sixteen-place 1)) ; concatenate here
-         (. hex-alphabet (+ zero-place 1)))))
+    (.. (. hex-alphabet (+ sixteen-place 1)) 
+        (. hex-alphabet (+ zero-place 1)))))
+
+(fn bytes-to-hex-string-helper [bytes idx accumulator]
+  (if (> idx (length bytes)) ; Check if idx has reached past the end
+    accumulator
+    (bytes-to-hex-string-helper
+     bytes
+     (+ idx 1)
+     (.. accumulator (byte-to-hex-str (. bytes idx))))))
 
 (fn bytes-to-hex-string [bytes]
-  (var hex-str "")
-  (each [_ byte (ipairs bytes)]
-    (let [hex-byte (byte-to-hex-str byte)]
-      (set hex-str (.. hex-str hex-byte))))
-  hex-str)
+  (bytes-to-hex-string-helper bytes 1 ""))
 
 (fn challenge1-2 []
   (local hex-string1 "1c0111001f010100061a024b53535009181c")
